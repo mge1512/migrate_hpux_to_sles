@@ -1,26 +1,82 @@
-default: migrating_from_hpux_to_sles.pdf migrating_from_hpux_to_sles.adoc migrating_from_hpux_to_sles.docx migrating_from_hpux_to_sles.epub
+# 1. FILES AND DIRECTORIES
+# ------------------------
 
-migrating_from_hpux_to_sles.md: chapters/00-00.md chapters/00-01.md chapters/05-00.md chapters/05-01.md chapters/05-02.md chapters/05-03.md chapters/10-00.md chapters/10-01.md chapters/10-02.md chapters/20-00.md chapters/20-01.md chapters/20-02.md chapters/30-00.md chapters/30-01.md chapters/30-02.md chapters/30-03.md chapters/30-04.md chapters/40-00.md chapters/40-01.md chapters/40-02.md chapters/40-03.md chapters/99-00.md
+# Automatically find all .md files and sort them (00-.., 10-.., 20-..)
+SOURCES	:= $(sort $(wildcard chapters/*.md))
+
+# Output filenames
+PDF_OUT = migrating_from_hpux_to_sles.pdf
+EPUB_OUT = migrating_from_hpux_to_sles.epub
+ADOC_OUT = migrating_from_hpux_to_sles.adoc
+DOCX_OUT = migrating_from_hpux_to_sles.docx
+
+# Assets (Headers, CSS, Images)
+# Ensure these files exist in your folder!
+LATEX_HEADER = style-latex.tex
+EPUB_CSS = style-epub.css
+COVER_IMG = 
+
+
+# 2. PANDOC OPTIONS
+# -----------------
+
+# Common options for all formats
+COMMON_FLAGS = --number-sections --top-level-division=chapter
+
+# PDF Specific Flags (The "Modern Professional" Setup)
+# Includes the xcolor fixes, booktabs, and KOMA-Script class
+PDF_FLAGS = 	--pdf-engine=pdflatex		\
+		--standalone			\
+		-V geometry:margin=1in		\
+		-V colorlinks=true		\
+		-V linkcolor=blue		\
+		-V urlcolor=blue		\
+		-V classoption=table		\
+		-V booktabs=true		\
+		-V documentclass=scrreprt	\
+		-H $(LATEX_HEADER)
+
+# EPUB Specific Flags (The "Ebook" Setup)
+# Includes TOC, split chapters, and CSS styling
+EPUB_FLAGS_LONG=--css=$(EPUB_CSS) 		\
+             	--toc 				\
+             	--toc-depth=2 			\
+             	--split-level=1 		\
+             	--epub-cover-image=$(COVER_IMG)
+
+EPUB_FLAGS =	--css=$(EPUB_CSS) 		\
+             	--toc 				\
+             	--toc-depth=2 
+
+# 3. TARGETS
+# ----------
+
+.PHONY: all pdf epub clean help
+
+all: migrating_from_hpux_to_sles.pdf migrating_from_hpux_to_sles.adoc migrating_from_hpux_to_sles.docx migrating_from_hpux_to_sles.epub
+
+migrating_from_hpux_to_sles.md: $(SOURCES)
 	cat $^ > $@
 
 %.pdf: %.tex 
 	pdflatex $< ; pdflatex $<
 
 %.tex: %.md 
-	pandoc --to=latex --standalone --number-sections --top-level-division=chapter -V geometry:margin=1in -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V classoption=table -V booktabs=true -V documentclass=scrreprt -H style-latex.tex --output=$@ $+
+	pandoc --from markdown --to latex $(COMMON_FLAGS) $(PDF_FLAGS) --output=$@ $+
 
 %.docx: %.md 
-	pandoc --to=docx --standalone --output=$@ $+
+	pandoc --from markdown --to=docx $(COMMON_FLAGS) --output=$@ $+
 
 %.adoc: %.md 
-	pandoc --from markdown --to asciidoc -o $@ $+
+	pandoc --from markdown --to asciidoc $(COMMON_FLAGS) -o $@ $+
 
 %.epub: %.md 
-	pandoc --from markdown --to epub --css=style-epub.css --toc --toc-depth=2 -o $@ $+
-###	pandoc --from markdown --to epub --css=style-epub.css --toc --toc-depth=2 --epub-cover-image=cover.jpg --split-level=1 -o $@ $+
+	pandoc --from markdown --to epub $(COMMON_FLAGS) $(EPUB_FLAGS) -o $@ $+
 
 clean:
-	rm -f migrating_from_hpux_to_sles.pdf migrating_from_hpux_to_sles.adoc migrating_from_hpux_to_sles.aux migrating_from_hpux_to_sles.log migrating_from_hpux_to_sles.nav migrating_from_hpux_to_sles.snm migrating_from_hpux_to_sles.tex migrating_from_hpux_to_sles.toc migrating_from_hpux_to_sles.vrb migrating_from_hpux_to_sles.docx migrating_from_hpux_to_sles.md migrating_from_hpux_to_sles.epub
+	rm -f $(PDF_OUT) $(EPUB_OUT) $(ADOC_OUT) $(DOCX_OUT)  migrating_from_hpux_to_sles.aux migrating_from_hpux_to_sles.log migrating_from_hpux_to_sles.nav migrating_from_hpux_to_sles.snm migrating_from_hpux_to_sles.tex migrating_from_hpux_to_sles.toc migrating_from_hpux_to_sles.vrb migrating_from_hpux_to_sles.md
+
+
 
 view:	migrating_from_hpux_to_sles.pdf
 	okular migrating_from_hpux_to_sles.pdf
