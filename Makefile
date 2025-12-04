@@ -1,6 +1,6 @@
 default: migrating_from_hpux_to_sles.pdf migrating_from_hpux_to_sles.adoc migrating_from_hpux_to_sles.docx migrating_from_hpux_to_sles.epub
 
-migrating_from_hpux_to_sles.md: chapters/00-00.md chapters/00-01.md chapters/05-00.md chapters/05-01.md chapters/05-02.md chapters/05-03.md chapters/10-00.md chapters/10-01.md chapters/10-02.md chapters/20-00.md chapters/20-01.md chapters/20-02.md chapters/30-00.md chapters/30-01.md chapters/30-02.md chapters/30-03.md chapters/30-04.md chapters/40-00.md chapters/40-01.md chapters/40-02.md chapters/99-00.md
+migrating_from_hpux_to_sles.md: chapters/00-00.md chapters/00-01.md chapters/05-00.md chapters/05-01.md chapters/05-02.md chapters/05-03.md chapters/10-00.md chapters/10-01.md chapters/10-02.md chapters/20-00.md chapters/20-01.md chapters/20-02.md chapters/30-00.md chapters/30-01.md chapters/30-02.md chapters/30-03.md chapters/30-04.md chapters/40-00.md chapters/40-01.md chapters/40-02.md chapters/40-03.md chapters/99-00.md
 	cat $^ > $@
 
 %.pdf: %.tex 
