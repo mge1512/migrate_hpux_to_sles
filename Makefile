@@ -93,7 +93,8 @@ migrating_from_hpux_to_sles.md: history $(SOURCES)
 clean:
 	rm -f $(PDF_OUT) $(EPUB_OUT) $(ADOC_OUT) $(DOCX_OUT)  migrating_from_hpux_to_sles.aux migrating_from_hpux_to_sles.log migrating_from_hpux_to_sles.nav migrating_from_hpux_to_sles.snm migrating_from_hpux_to_sles.tex migrating_from_hpux_to_sles.toc migrating_from_hpux_to_sles.vrb migrating_from_hpux_to_sles.md
 
-
+output:	$(PDF_OUT) $(EPUB_OUT) $(ADOC_OUT) $(DOCX_OUT)
+	cp -a $(PDF_OUT) $(EPUB_OUT) $(ADOC_OUT) $(DOCX_OUT) output
 
 view:	migrating_from_hpux_to_sles.pdf
 	okular migrating_from_hpux_to_sles.pdf
