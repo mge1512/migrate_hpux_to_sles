@@ -1,9 +1,5 @@
+
 ## Part I: The Architectural Divide (System Core & Philosophy)
 
-* **Chapter 1:** Core OS and Kernel (Proprietary UNIX vs. Open-source Linux)
-* **Chapter 2:** Hardware Choice (Multi-platform/Active)
-* **Chapter 3:** Vendor Support Model (SUSE's Subscription model)
-* **Chapter 4:** Boot and Init System (SysV init vs. systemd)
-* **Chapter 5:** File System Hierarchy (Older UNIX vs. UsrEtc Model)
-
+The divergence between HP-UX and SLES 16 begins at the very core of the operating system: how it boots, how it organizes files, and how it manages memory. These are not superficial differences but fundamental architectural disagreements on how an operating system should function.
 

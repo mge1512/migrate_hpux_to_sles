@@ -1,1 +1,32 @@
 ## Preface
+
+Welcome! If you open this guide, you may have spent significant time in your life working on and with HP-UX, and you are tasked to migrate an infrastructure from HP-UX to the modern Linux, SUSE Linux Enterprise Server 16.
+
+This transition from HP-UX on Itanium architecture to SUSE Linux Enterprise Server 16 (SLES 16) on x86-64 represents one of the most significant paradigm shifts in the career of a UNIX system administrator. For over two decades, HP-UX 11i has stood as a paragon of vertical scalability, deterministic stability, and rigorous adherence to the System V (SysV) UNIX philosophy. It is an operating system designed for an era where uptime was maintained by hardware redundancy and monolithic software architectures. The administrator’s interaction with HP-UX was imperative, procedural, and deeply rooted in Korn shell (ksh) scripting. 
+
+However, the release of SLES 16 in late 2025 marks the arrival of a new era in enterprise Linux, one that diverges not only from legacy UNIX but also from previous SUSE Linux generations. SLES 16 is designed for a world of horizontal scaling, immutable infrastructure, and automated compliance. It introduces radical architectural changes — such as the UsrEtc configuration model, dynamic network configuration using NetworkManager, and the mandatory enforcement of SELinux — that require a complete re-evaluation of established administrative workflows. And SLES 16 continues to deliver added value such as snapshot-rollback capabilities and the transactional update mode of its sibbling, SUSE Linux Micro 6.2.
+
+For the System Administrator, the learning curve is steepest in three areas:
+
+1. **Systemd:** Moving from script-based sequencing to dependency-based state management.  
+2. **Filesystem & Storage:** Adapting to Btrfs subvolumes, copy-on-write snapshots, and the split UsrEtc hierarchy.  
+3. **Security:** Shifting from the user-centric DAC model to the policy-centric SELinux MAC model.
+
+This document serves as a technical guide for the Senior Systems Administrator bridging this gap. It does not merely list command equivalents; it explores the philosophical and architectural chasms between the two systems. It provides the "why" behind the "how," ensuring that the transitioning professional understands the underlying mechanisms of systemd resource control, the copy-on-write semantics of Btrfs, and the state-based logic of modern clustering, enabling them to architect solutions that leverage the full capability of the modern Linux world.
+
+To achieve this, we have chosen to describe the differences and approaches in four topical groups:
+
+1. The Architectural Divide (System Core & Philosophy)
+2. Daily Administration and Command Tools
+3. Advanced Systems and Security
+4. Future-Proofing and Development Ecosystem
+
+### SUSE Documentation
+
+tbd.
+
+### Contributing
+
+If you find errors or would otherwise like to participate in this guide, do not hesitate to send contributions via Github: https://github.com/mge1512/migrate_hpux_to_sles
+
+
