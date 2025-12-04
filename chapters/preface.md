@@ -1,4 +1,4 @@
-## Preface
+# Preface
 
 Welcome! If you open this guide, you may have spent significant time in your life working on and with HP-UX, and you are tasked to migrate an infrastructure from HP-UX to the modern Linux, SUSE Linux Enterprise Server 16.
 
@@ -21,11 +21,11 @@ To achieve this, we have chosen to describe the differences and approaches in fo
 3. Advanced Systems and Security
 4. Future-Proofing and Development Ecosystem
 
-### SUSE Documentation
+## SUSE Documentation
 
 tbd.
 
-### Contributing
+## Contributing
 
 If you find errors or would otherwise like to participate in this guide, do not hesitate to send contributions via Github: https://github.com/mge1512/migrate_hpux_to_sles
 

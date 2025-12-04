@@ -1,5 +1,5 @@
 
-## Part II: Daily Administration and Command Tools
+# Part II: Daily Administration and Command Tools
 
 Moving from the HP-UX sam and command-line ecosystem to SLES 16 requires mastering a new set of tools that are generally more automated but abstract away more detail.
 

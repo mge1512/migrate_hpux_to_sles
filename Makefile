@@ -6,13 +6,13 @@ migrating_from_hpux_to_sles.md: chapters/header.md chapters/preface.md chapters/
 %.pdf: %.tex 
 	pdflatex $< ; pdflatex $<
 
-%.tex: %.md Makefile
-	pandoc --to=latex --standalone --number-sections --top-level-division=section -V geometry:margin=1in -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V documentclass=scrreprt --output=$@ $+
+%.tex: %.md 
+	pandoc --to=latex --standalone --number-sections --top-level-division=chapter -V geometry:margin=1in -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V documentclass=scrreprt --output=$@ $+
 
-%.docx: %.md Makefile
+%.docx: %.md 
 	pandoc --to=docx --standalone --output=$@ $+
 
-%.adoc: %.md Makefile
+%.adoc: %.md 
 	pandoc --from markdown --to asciidoc -o $@ $+
 
 clean:

@@ -1,5 +1,5 @@
 
-## Part III: Advanced Systems and Security
+# Part III: Advanced Systems and Security
 
 * **Chapter 11:** Security & MAC (DAC/Trusted System vs. SELinux/firewalld)
 * **Chapter 12:** Logging and Auditing (Syslog/audsys vs. Journald/Auditd)

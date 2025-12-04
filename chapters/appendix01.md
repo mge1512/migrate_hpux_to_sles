@@ -1,6 +1,6 @@
-## Appendix
+# Appendix
 
-### Common Command Comparison Table
+## Common Command Comparison Table
 
 | Task Category | Description | HP-UX Command(s) | SLES 16 Command(s) |
 | :--- | :--- | :--- | :--- |
