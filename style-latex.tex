@@ -71,3 +71,18 @@
     }
 }
 
+% Customized Lists
+\usepackage{enumitem}
+
+% 1. Set global settings for bullet lists (itemize) and numbered lists (enumerate)
+%    nosep      = kills ALL vertical space (top, bottom, and between items)
+%    itemsep=... = adds a tiny bit of breathing room between items (optional)
+\setlist[itemize]{nosep, itemsep=0pt}
+\setlist[enumerate]{nosep, itemsep=0pt}
+
+% 2. Fix indentation (Optional but looks "modern")
+%    This aligns the bullet with the left margin, rather than indented
+\setlist[itemize,1]{leftmargin=*}
+\setlist[enumerate,1]{leftmargin=*}
+
+
