@@ -2,6 +2,7 @@
 
 | Date | Commit | Author | Description |
 |:---|:---|:---|:---|
+| 2025-12-04 | f5a0142 | Matthias G. Eckermann | Cleanup tasks and README.md |
 | 2025-12-04 | af6328e | Matthias G. Eckermann | Cleanup Disk/LVM section |
 | 2025-12-04 | 2ce4654 | Matthias G. Eckermann | Add ToC |
 | 2025-12-04 | 12a63c8 | Matthias G. Eckermann | Fix code blocks: do not need backslashes ... |
