@@ -16,6 +16,9 @@ LATEX_HEADER = style-latex.tex
 EPUB_CSS = style-epub.css
 COVER_IMG = 
 
+# Automatically generated history
+HISTORY_FILE = chapters/99-history.md
+HISTORY_LIMIT = -n 42
 
 # 2. PANDOC OPTIONS
 # -----------------
@@ -55,8 +58,19 @@ EPUB_FLAGS =	--css=$(EPUB_CSS) 		\
 
 all: migrating_from_hpux_to_sles.pdf migrating_from_hpux_to_sles.adoc migrating_from_hpux_to_sles.docx migrating_from_hpux_to_sles.epub
 
-migrating_from_hpux_to_sles.md: $(SOURCES)
-	cat $^ > $@
+# Generator for Version History
+history:
+	@echo "Generating Version History from Git..."
+	@echo "# Version History {-}" > $(HISTORY_FILE)
+	@echo "" >> $(HISTORY_FILE)
+	@echo "| Date | Commit | Author | Description |" >> $(HISTORY_FILE)
+	@echo "|:---|:---|:---|:---|" >> $(HISTORY_FILE)
+	@git log $(HISTORY_LIMIT) --date=short --pretty=format:"| %cd | %h | %an | %s |" >> $(HISTORY_FILE)
+	@echo "" >> $(HISTORY_FILE)
+	@echo ": Recent Changes (Auto-generated)" >> $(HISTORY_FILE)
+
+migrating_from_hpux_to_sles.md: history $(SOURCES)
+	cat $(SOURCES) > $@
 
 %.pdf: %.tex 
 	pdflatex $< ; pdflatex $<
