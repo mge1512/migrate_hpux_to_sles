@@ -7,7 +7,7 @@ migrating_from_hpux_to_sles.md: chapters/header.md chapters/preface.md chapters/
 	pdflatex $< ; pdflatex $<
 
 %.tex: %.md
-	pandoc --to=latex --standalone --output=$@ $+
+	pandoc --to=latex --standalone  -V geometry:margin=1in -V colorlinks=true -V linkcolor=blue -V urlcolor=blue -V documentclass=scrartcl --output=$@ $+
 
 %.docx: %.md
 	pandoc --to=docx --standalone --output=$@ $+
