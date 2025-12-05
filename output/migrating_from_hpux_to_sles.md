@@ -252,27 +252,19 @@ On SLES 16:
 
 ### The Partitioning of /opt and /usr/local
 
-* **HP-UX:** /opt is the primary location for almost all software (SD-UX bundles install to /opt/package). /usr is often a mix of OS links and binaries.  
-* **SLES 16:**  
-  * /usr/bin: Primary location for package binaries.  
-  * /opt: Reserved for large, self-contained third-party applications (Oracle DB, SAP HANA, Microsoft, proprietary agents).  
-  * /usr/local: Reserved for software compiled manually by the admin (./configure && make install). SLES package manager will *never* touch files in /usr/local.
+| Partition / Path    | HP-UX               | SLES 16             |
+|:--------------------|:--------------------|:--------------------|
+| /usr                | Often a mix of OS links and binaries. | /usr is "owned" by the OS vendor. /usr/binn is the primary location for package binaries.|
+| /opt                | Primary location for almost all software (SD-UX bundles install to /opt/package) | Reserved for large, self-contained third-party applications (Oracle DB, SAP HANA, Microsoft, proprietary agents) |
+| /usr/local          | No special handling | Reserved for software compiled manually by the admin (./configure && make install). SUSE as part of SLES will *never* touch files in /usr/local. | 
 
 # Daily Administration and Command Tools
 
 Moving from the HP-UX sam and command-line ecosystem to SLES 16 requires mastering a new set of tools that are generally more automated but abstract away more detail.
 
-* Package Management: SD-UX vs. Zypper and Cockpit
-* Disk, LVM, and Filesystems (HP LVM/VxFS vs. Linux LVM/Btrfs/Snapper)
-* Command Shells (sh/ksh vs. Bash) 
-* Missing
-	* System Management Tools (SMH/SAM vs. Cockpit)
-	* Networking Configuration (Traditional vs. NetworkManager)
-
-
 ## Package Management: SD-UX vs. Zypper and Cockpit
 
-For the HP-UX administrator, swinstall, swlist, and swremove (SD-UX) are muscle memory. The transition to SLES 16 requires a conceptual shift from managing static "software depots" to interacting with dynamic, dependency-aware "repositories" via the **Zypper** command-line engine and the **Cockpit** web interface.
+For the HP-UX administrator, swinstall, swlist, and swremove (SD-UX) are muscle memory. The transition to SLES 16 requires a conceptual shift from managing static "software depots" to interacting with dynamic, dependency-aware "repositories" via the **zypper** command-line engine and the **cockpit** web interface.
 
 ### The SAT Solver Revolution: Zypper vs. SD-UX
 
@@ -508,14 +500,20 @@ The following table highlights the 20 most critical syntax differences an admini
 2. **Linting:** Install shellcheck on SLES 16 (zypper in ShellCheck). Run it against legacy scripts to instantly identify ksh88 syntax that fails in Bash. Mind that ShellCheck is not part of SLES 16.0, but the community supported PackageHub repository.  
 3. **Environment:** Do not copy .profile from HP-UX to SLES. Use the SLES default .bashrc and port aliases manually to avoid environment pollution.
 
+## Network Configuration (Traditional vs. NetworkManager)
+
+
+## System Management Tools (SMH/SAM vs. Cockpit)
+
+
 # Advanced Systems Management and Security
 
 * Security and Access Control
 * Logging and Auditing
 * Clustering and High Availability: Serviceguard vs. Pacemaker
 * Kernel Patching: Zero Downtime with kGraft
-* Missing
-	* Time Sync Services (ntpd vs. Chrony)
+
+
 
 
 ## Security and Access Control
@@ -636,13 +634,6 @@ kGraft allows the administrator to apply critical security patches to the runnin
 
 # Future-Proofing and Development Ecosystem
 
-* Configuration Management: The Shift to IaC
-* Dynamic Linking, Compilation, and Symbol Versioning: Itanium vs. x86-64
-* Missing
-	* Development Tools (Proprietary Compilers vs. GCC): Extended Development framework description
-	* Virtualization/Containers (HPVM vs. KVM/Podman/Docker)
-	* Monitoring & Performance (GlancePlus vs. Prometheus/Grafana)
-
 
 
 ## Configuration Management: The Shift to IaC
@@ -691,6 +682,21 @@ When recompiling in-house C/C++ applications from HP-UX to SLES 16:
 * **Flags:** The HP-UX \+z or \+Z flags (for Position Independent Code \- PIC) must be replaced with \-fPIC in GCC. The \+b flag (to embed runpaths) translates to \-Wl,-rpath.18  
 * **Glibc:** SLES 16 uses glibc (GNU C Library). Glibc utilizes strict **Symbol Versioning**. If an application is compiled against a specific version of a library, it expects that specific version of the symbol at runtime. This prevents the "DLL Hell" sometimes seen on older UNIX systems but requires that binaries be recompiled if the underlying library major version changes significantly. HP-UX's SHLI (Shared Library) versioning was often looser, allowing simpler symlink swaps to upgrade libraries.
 
+
+
+
+## Development Tools 
+
+
+
+## Virtualization and Containers 
+
+
+## Monitoring and Performance
+
+
+
+## Introduction into Agentic AI
 
 
 

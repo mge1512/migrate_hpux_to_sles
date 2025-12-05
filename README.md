@@ -13,23 +13,22 @@
 * Package Management: SD-UX vs. Zypper and Cockpit
 * Disk, LVM, and Filesystems (HP LVM/VxFS vs. Linux LVM/Btrfs/Snapper)
 * Command Shells (sh/ksh vs. Bash)  
-* Missing
+* WIP
+	* Network Configuration (Traditional vs. NetworkManager)
 	* System Management Tools (SMH/SAM vs. Cockpit)
-	* Networking Configuration (Traditional vs. NetworkManager)
 
 ## Advanced Systems Management and Security
 * Security and Access Control
 * Logging and Auditing
 * Clustering and High Availability: Serviceguard vs. Pacemaker
 * Kernel Patching: Zero Downtime with kGraft
-* Missing
-	* Time Sync Services (ntpd vs. Chrony)
 
 ## Future-Proofing and Development Ecosystem
 * Configuration Management: The Shift to IaC
 * Dynamic Linking, Compilation, and Symbol Versioning: Itanium vs. x86-64
-* Missing
+* WIP
 	* Development Tools (Proprietary Compilers vs. GCC): Extended Development framework description
-	* Virtualization/Containers (HPVM vs. KVM/Podman/Docker)
-	* Monitoring & Performance (GlancePlus vs. Prometheus/Grafana)
+	* Virtualization and Containers (HPVM vs. KVM/Podman/Docker)
+	* Monitoring and Performance (GlancePlus vs. Prometheus/Grafana)
+	* Introduction into Agentic AI
 
