@@ -918,11 +918,6 @@ pollution.
 
 == Advanced Systems Management and Security
 
-* Security and Access Control
-* Logging and Auditing
-* Clustering and High Availability: Serviceguard vs. Pacemaker
-* Kernel Patching: Zero Downtime with kGraft
-
 === Security and Access Control
 
 ==== DAC vs. MAC: The Conceptual Leap

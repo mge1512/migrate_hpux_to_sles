@@ -508,10 +508,6 @@ The following table highlights the 20 most critical syntax differences an admini
 
 # Advanced Systems Management and Security
 
-* Security and Access Control
-* Logging and Auditing
-* Clustering and High Availability: Serviceguard vs. Pacemaker
-* Kernel Patching: Zero Downtime with kGraft
 
 
 
