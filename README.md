@@ -28,7 +28,6 @@
 ## Future-Proofing and Development Ecosystem
 * Configuration Management: The Shift to IaC
 * Dynamic Linking, Compilation, and Symbol Versioning: Itanium vs. x86-64
-* Memory Management
 * Missing
 	* Development Tools (Proprietary Compilers vs. GCC): Extended Development framework description
 	* Virtualization/Containers (HPVM vs. KVM/Podman/Docker)
