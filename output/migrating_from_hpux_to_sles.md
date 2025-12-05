@@ -16,13 +16,13 @@ This transition from HP-UX on Itanium architecture to SUSE Linux Enterprise Serv
 
 However, the release of SLES 16 in late 2025 marks the arrival of a new era in enterprise Linux, one that diverges not only from legacy UNIX but also from previous SUSE Linux generations. SLES 16 is designed for a world of horizontal scaling, immutable infrastructure, and automated compliance. It introduces radical architectural changes — such as the UsrEtc configuration model, dynamic network configuration using NetworkManager, and the mandatory enforcement of SELinux — that require a complete re-evaluation of established administrative workflows. And SLES 16 continues to deliver added value such as snapshot-rollback capabilities and the transactional update mode of its sibbling, SUSE Linux Micro 6.2.
 
-For the System Administrator, the learning curve is steepest in three areas:
+We assume that you do have experience with Linux systems already. Still, for the System Administrator, the learning curve from HP-UX towards Linux is steepest in three areas:
 
 1. **Systemd:** Moving from script-based sequencing to dependency-based state management.  
 2. **Filesystem & Storage:** Adapting to Btrfs subvolumes, copy-on-write snapshots, and the split UsrEtc hierarchy.  
 3. **Security:** Shifting from the user-centric DAC model to the policy-centric SELinux MAC model.
 
-This document serves as a technical guide for the Senior Systems Administrator bridging this gap. It does not merely list command equivalents; it explores the philosophical and architectural chasms between the two systems. It provides the "why" behind the "how," ensuring that the transitioning professional understands the underlying mechanisms of systemd resource control, the copy-on-write semantics of Btrfs, and the state-based logic of modern clustering, enabling them to architect solutions that leverage the full capability of the modern Linux world.
+This document serves as a technical guide for the Senior Systems Administrator bridging this gap. It does not merely list command equivalents; it briefly explores the philosophical and architectural differences between the two systems, to help understanding the underlying mechanisms of systemd resource control, the copy-on-write semantics of Btrfs, and the state-based logic of modern clustering. This enables you to architect solutions that leverage the full capability of the modern Linux world.
 
 To achieve this, we have chosen to describe the differences and approaches in four topical groups:
 
@@ -41,12 +41,12 @@ If you find errors or would otherwise like to participate in this guide, do not 
 
 ## Official Documentation and Technical Resources
 
-SLES 16 introduces a reorganized documentation structure. The "System Analysis and Tuning Guide" and "Storage Administration Guide" have been updated significantly to reflect the shift to Btrfs and systemd. Below are the essential resources for the transitioning administrator.
+The documentation for SLES 16 is part of the overall [documentation for SUSE products](https://documentation.suse.com/). As part of that, SLES 16 introduces a reorganized documentation structure. The "System Analysis and Tuning Guide" and "Storage Administration Guide" have been updated significantly to reflect the shift to Btrfs and systemd. Below are the essential resources for the transitioning administrator.
 
 | Document Title | Target Audience & Use Case | Direct Link |
 | :---- | :---- | :---- |
-| **Release Notes SLES 16.0** | **Start Here.** Covers deprecated packages (e.g., removal of wicked, xinetd), new kernel modules, and known issues. | ([https://documentation.suse.com/releasenotes/sles/html/releasenotes\_sles\_16.0/index.html](https://documentation.suse.com/releasenotes/sles/html/releasenotes_sles_16.0/index.html)) |
 | **Product Documentation Portal** | The central hub for all SLES 16 manuals, accessible in HTML and PDF formats. | [documentation.suse.com/sles/16.0](https://documentation.suse.com/sles/16.0/) |
+| **Release Notes SLES 16.0** | **Start Here.** Covers deprecated packages, new kernel modules, and known issues. | ([https://documentation.suse.com/releasenotes/sles/html/releasenotes\_sles\_16.0/index.html](https://documentation.suse.com/releasenotes/sles/html/releasenotes_sles_16.0/index.html)) |
 | **Key Technical Differences** | Specifically detailed for admins moving from SLES 15, but highly relevant for UNIX admins to understand the UsrEtc and systemd shifts. | ([https://documentation.suse.com/sles/16.0/html/SLE-comparison/](https://documentation.suse.com/sles/16.0/html/SLE-comparison/)) |
 | **Storage Administration Guide** | Critical for managing Btrfs subvolumes, Snapper rollbacks, and software RAID. | ([https://documentation.suse.com/sles/16.0/html/SLES-storage/index.html](https://www.google.com/search?q=https://documentation.suse.com/sles/16.0/html/SLES-storage/index.html)) |
 | **Security & Hardening Guide** | Covers the implementation of SELinux (Targeted Policy) and auditing with auditd. | ([https://documentation.suse.com/sles/16.0/html/SLES-security/index.html](https://www.google.com/search?q=https://documentation.suse.com/sles/16.0/html/SLES-security/index.html)) |
@@ -55,47 +55,29 @@ SLES 16 introduces a reorganized documentation structure. The "System Analysis a
 
 ## Availability on different Hardware Architectures
 
-Unlike HP-UX, which was tightly coupled to PA-RISC and later Itanium (IA64), SLES 16 is a cross-platform operating system. However, with version 16, SUSE has raised the instruction set baseline for modern processors. SLES 16 is officially available and supported on the following four architectures:
+Unlike HP-UX, which was tightly coupled first to PA-RISC and later Itanium (IA64), SLES 16 is an operating system targetting "ubiquity": the availability on all Enterprise-grade hardware architectures and cloud-platforms, and serving all sizes and use cases from Edge and POS devices to datacenter and HPC deployments as well as working on huge scale-up machines. SLES 16 is officially available and supported on the following four architectures:
 
-### x86-64 (AMD64 / Intel 64\)
-
-* **Status:** Primary Enterprise Platform.  
-* **Requirement:** **x86-64-v2** microarchitecture level or higher.  
-* **Impact:** SLES 16 will **not boot** on very old x86-64 CPUs (roughly pre-2009, e.g., first-gen Core 2 Duo or early Opterons) that lack support for SSE4.2, SSSE3, and POPCNT instructions. Administrators repurposing old hardware for sandboxes must verify CPU flags using /proc/cpuinfo.
-
-### IBM Power (ppc64le)
-
-* **Status:** High-performance database and analytics platform (SAP HANA).  
-* **Requirement:** **IBM Power10** or higher.  
-* **Note:** While SLES 16 may technically boot on Power9 systems (running in Little Endian mode), SUSE officially supports only Power10 and newer processors for this release. This aligns with the lifecycle of high-end RISC hardware refresh cycles often seen in former HP-UX environments.
-
-### IBM Z and LinuxONE (s390x)
-
-* **Status:** Mainframe Linux.  
-* **Requirement:** **IBM z14** or higher.  
-* **Context:** For organizations consolidating HP-UX workloads onto mainframes, SLES 16 leverages the z/Architecture's specific crypto-acceleration and I/O channeling capabilities.
-
-### Arm64 (AArch64)
-
-* **Status:** Edge computing and high-density datacenter servers.  
-* **Requirement:** **Armv8.0-A** or higher.  
-* **Use Case:** Increasingly common in cloud environments (e.g., AWS Graviton) and energy-efficient datacenters. SLES 16 includes full support for ACPI on Arm, making it a viable target for general-purpose application migration from legacy UNIX systems.
-
+| Architecture        | Status / Primary Use Case | Minimum Requirement | Notes & Impact |
+|:--------------------|:--------------------|:--------------------|:-------------------------------------------------------------|
+| **x86-64** (AMD64 / Intel 64) | Most common Enterprise Platform | **x86-64-v2** microarchitecture level or higher | SLES 16 works on all recent hardware, but will not boot on very old x86-64 CPUs (roughly pre-2009, e.g., first-gen Core 2 Duo or early Opterons) that lack support for SSE4.2, SSSE3, and POPCNT instructions. Administrators repurposing old hardware for sandboxes must verify CPU flags using /proc/cpuinfo.|
+| **IBM Power** (ppc64le) | High-performance DB (HANA) | **IBM Power10** or higher | While SLES 16 may technically boot on Power9 systems (running in Little Endian mode), SUSE officially supports only Power10 and newer processors for this release. This aligns with the lifecycle of high-end RISC hardware refresh cycles often seen in former HP-UX environments. |
+| **IBM Z** & LinuxONE (s390x) | Mainframe Linux | **IBM z14** or higher | For organizations consolidating HP-UX workloads onto mainframes, SLES 16 leverages the z/Architecture's specific crypto-acceleration and I/O channeling capabilities. |
+| **Arm64** (AArch64) | Edge & Cloud Datacenter | **Armv8.0-A**+ | Increasingly common in cloud environments (e.g., AWS Graviton) and energy-efficient datacenters. SLES 16 includes full support for ACPI on Arm, making it a viable target for general-purpose application migration from legacy UNIX systems. |
 
 
 ## Quick Start: Two Paths to SLES 16
 
-For an HP-UX administrator, the fastest way to understand SLES 16 is not to read about it, but to interact with the new CLI and directory structure. SUSE provides two friction-less paths to get a shell prompt without performing a full ISO installation.
+For an HP-UX administrator, the fastest way to understand SLES 16 is not to read about it, but to interact with the new CLI and directory structure. SUSE provides two friction-less paths to get a shell prompt without performing a full  installation on bare-metal.
 
 ### Path 1: Local Virtualization (The "Minimal VM" Image)
 
-The **Minimal VM** images contain a stripped-down SLES 16 userland with systemd, zypper, and network-manager pre-configured. These are perfect to start your journey with. 
+The **Minimal VM** images contain a ready-to-use minimal SLES 16 system with systemd, zypper, and network-manager pre-configured. These are perfect to start your journey with. 
 **Steps:**
 
 1. **Download:** Visit [download.suse.com](https://www.suse.com/download/sles/) and select "SLES 16".  
 2. **Select Image Format:**  
    * **KVM/QEMU:** Download SLES-16.0-Minimal-VM.x86\_64-kvm-and-xen-GM.qcow2.  
-   * **VMware ESXi/Workstation:** Download the .vmdk or .ova variant.  
+   * **VMware ESXi/Workstation:** Download the .vmdk and corresponding .vmx files.  
    * **Hyper-V:** Download the .vhdx variant.  
 3. **Boot:** Attach the image to a new VM.  
 4. **First Boot:** The image utilizes **Combustion** or **Ignition** for configuration, but if no config drive is found, it will default to an interactive wizard to set the root password and network.
@@ -112,13 +94,13 @@ Running SLES 16 in the cloud is the preferred method for testing the new **Agent
 Cloud-Specific Defaults to Note:  
 Unlike the "Minimal VM" or ISO installs, public cloud images often have specific pre-configurations:
 
-* **Network:** NetworkManager is the mandatory backend (replacing wicked).2  
-* **Security:** SELinux is set to Enforcing by default on standard SLES 16 images, though SLES for SAP variants may default to Permissive to ensure database compatibility during the transition period.2  
-* **Updates:** Instances are pre-wired to the Public Cloud Update Infrastructure (PCUI), meaning zypper update works immediately without manual registration to SUSE Customer Center (PAYG models).
+* **Network:** NetworkManager is the mandatory backend  
+* **Security:** SELinux is set to Enforcing by default on standard SLES 16 images, though SLES for SAP variants may default to Permissive to ensure database compatibility during the transition period.  
+* **Updates:** Instances are pre-wired to SUSE's Public Cloud Update Infrastructure, meaning zypper update works immediately without manual registration to SUSE Customer Center (PAYG models).
 
 # The Architectural Divide (System Core & Philosophy)
 
-The divergence between HP-UX and SLES 16 begins at the very core of the operating system: how it boots, how it organizes files, and how it manages memory. These are not superficial differences but fundamental architectural disagreements on how an operating system should function.
+The divergence between HP-UX and SLES 16 begins at the very core of the operating system: how it boots, and how it organizes files. These are not superficial differences but fundamental architectural disagreements on how an operating system should function. 
 
 
 ## Init System and Service Management: From Sequence to Dependency
@@ -158,15 +140,14 @@ The systemctl command is the omnipotent tool in SLES 16, replacing init, rc, and
 
 #### Scenario 1: Managing a Service (e.g., SSH)
 
-* **HP-UX:**  
-  * *Start:* /sbin/init.d/secsh start  
-  * *Stop:* /sbin/init.d/secsh stop  
-  * *Status:* No native status command in the init script usually; admin checks ps \-ef | grep sshd.8  
-* **SLES 16:**  
-  * *Start:* systemctl start sshd.service  
-  * *Stop:* systemctl stop sshd.service  
-  * *Status:* systemctl status sshd.service  
-  * *Insight:* The status command in systemd is far superior. It displays the service state (Active/Inactive), the main PID, the memory usage (via cgroups), and the last 10 lines of log output from Journald. This instant context is unavailable in HP-UX.9
+
+| Function    | HP-UX                           | SLES 16                         |
+| :---------- | :------------------------------ | :------------------------------ |
+| Start       | /sbin/init.d/secsh start  | systemctl start sshd.service |
+| Stop        | /sbin/init.d/secsh stop   | systemctl stop sshd.service  |
+| Status      | o native status command in the init script usually; admin checks `ps -ef `\| ` grep sshd.8 ` | systemctl status sshd.service |
+
+*Insight:* The status command in systemd is far superior. It displays the service state (Active/Inactive), the main PID, the memory usage (via cgroups), and the last 10 lines of log output from Journald. This instant context is unavailable in HP-UX.9
 
 #### Scenario 2: Enabling a Service at Boot
 
